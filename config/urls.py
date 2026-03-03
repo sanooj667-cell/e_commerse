@@ -2,13 +2,14 @@ from django.contrib import admin
 from django.http import JsonResponse
 from django.urls import path
 
-def home(request):
+def health_check(request):
     return JsonResponse({
-        "status": "success",
-        "message": "Backend is running 🚀"
+        "status": "ok",
+        "service": "e-commerce-api",
+        "environment": "production"
     })
 
 urlpatterns = [
-    path('', home),
+    path('health/', health_check),
     path('admin/', admin.site.urls),
 ]
