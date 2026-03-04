@@ -1,16 +1,14 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-from users.manager import Usermanager
+from .manager import Usermanager
 
 
 
 class User(AbstractUser):
     username = None
     email = models.EmailField(unique=True , max_length=256, error_messages={'unique':'email already exists,'})
-    is_customer = models.BooleanField(default=False)
-    is_store = models.BooleanField(default=False)
-    is_agent = models.BooleanField(default=False)
-    is_manager = models.BooleanField(default=False)
+    is_customer = models.BooleanField(default=True)
+    is_staff_user = models.BooleanField(default=False)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
