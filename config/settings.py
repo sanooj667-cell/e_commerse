@@ -34,7 +34,7 @@ INSTALLED_APPS = [
     'corsheaders',
 
     'apps.users',
-    "apps.categories",
+    'apps.categories',
 ]
 
 # ======================

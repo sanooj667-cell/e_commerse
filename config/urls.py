@@ -13,4 +13,5 @@ urlpatterns = [
     path('health/', health_check),
     path('admin/', admin.site.urls),
     path('app/users/', include('apps.users.urls')),
+    path('app/categories/', include('apps.categories.urls')),
 ]
