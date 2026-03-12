@@ -4,8 +4,9 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAdminUser, AllowAny
 from rest_framework.response import Response
 from rest_framework import status
-from .models import Category
-from .serializers import CategorySerializer
+from .models import Category,Product
+from .serializers import CategorySerializer,ProductSerializer
+
 
 @api_view(["GET", "POST"])
 def categories(request):
@@ -72,19 +73,50 @@ def category_detail(request, pk):
         return Response({"error":"category deleted successfully"})
     
 
-
+@api_view(["GET", "POST"])
 def Products(request):
-    pass
+    if request.method == "GET":
+        Products = Product.objects.all()
+        serializer = ProductSerializer(Products, many=True)
+        return Response(serializer.data)
 
-def edit_product(request):
-    pass
-
-def delete_product(request):
-    pass
+    if request.method == "POST":
+        if not request.user.is_staff_user:
+            return Response({"error": "Only admin can create products"}, status=status.HTTP_403_FORBIDDEN)
+        serializer = ProductSerializer(data=request.data)
+        serializer.is_valid()
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    
 
         
-            
-
+@api_view(["GET", "PUT"])
+def edit_product(request, pk):
+    try:
+        products = Product.objects.get(id=pk)
+    except Product.DoesNotExist:
+        return Response({"error": "Product not found"}, status=404)
     
+
+    serilizer = ProductSerializer(products, data=request.data)
+    if serilizer.is_valid():
+        serilizer.save()
+        return Response(serilizer.data)
+    
+    
+    
+@api_view(["DELETE"])
+def delete_product(request,pk):
+    try:
+        products = Product.objects.get(id=pk)
+
+    except Product.DoesNotExist:
+        return Response({"error": "Product not found"}, status=404)
+    
+    if not request.user.is_staff_user:
+        return Response({"error": "Only admin can delete products"}, status=status.HTTP_403_FORBIDDEN)
+
+    products.delete()
+    return Response({"message": "Product deleted successfully"})
 
 
