@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from backend.cart.models import Cart, CartItem
+from .models import Cart, CartItem
 
 # Register your models here.
 
