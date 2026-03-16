@@ -102,6 +102,8 @@ def edit_product(request, pk):
     if serilizer.is_valid():
         serilizer.save()
         return Response(serilizer.data)
+    return Response(serilizer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
     
     
     

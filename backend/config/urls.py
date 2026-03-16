@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.http import JsonResponse
 from django.urls import include, path
+from apps.categories import views as category_views
 
 def health_check(request):
     return JsonResponse({
@@ -14,4 +15,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('app/users/', include('apps.users.urls')),
     path('app/categories/', include('apps.categories.urls')),
+    path('app/products/', category_views.Products, name='products'),
 ]
