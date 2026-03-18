@@ -25,10 +25,13 @@ def Add_to_Cart(request, product_id):
 
 @api_view(["GET"])
 def View_Cart(request):
-    cart = Cart.objects.get(user=request.user)
-    items = CartItem.objects.filter(cart=cart)
-    data = []
+    try:
+        cart = Cart.objects.get(user=request.user)
+        items = CartItem.objects.filter(cart=cart)
+    except Cart.DoesNotExist:
+        return Response([])
 
+    data = []
     for item in items:
         data.append({
             "product": item.product.name,

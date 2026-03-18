@@ -77,16 +77,19 @@ def category_detail(request, pk):
 def Products(request):
     if request.method == "GET":
         Products = Product.objects.all()
-        serializer = ProductSerializer(Products, many=True)
+        context = {"request": request}
+        serializer = ProductSerializer(Products, many=True, context=context)
         return Response(serializer.data)
 
     if request.method == "POST":
         if not request.user.is_staff_user:
             return Response({"error": "Only admin can create products"}, status=status.HTTP_403_FORBIDDEN)
-        serializer = ProductSerializer(data=request.data)
-        serializer.is_valid()
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        context = {"request": request}
+        serializer = ProductSerializer(data=request.data, context=context)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 
         
