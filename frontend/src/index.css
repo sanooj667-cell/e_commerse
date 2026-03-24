@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Space+Mono:wght@400;700&display=swap');
 
 @import "tailwindcss";
 
@@ -14,8 +14,14 @@
   --color-spice-900: #29382B; /* Deep forest green */
   --color-spice-950: #1B261D; /* Darker green */
   
+  --color-space-black: #050505;
+  --color-stellar-white: #F8FAFC;
+  --color-glass-white: rgba(255, 255, 255, 0.1);
+  --color-glass-border: rgba(255, 255, 255, 0.2);
+
   --font-sans: 'Outfit', sans-serif;
   --font-serif: 'Playfair Display', serif;
+  --font-technical: 'Space Mono', monospace;
 }
 
 body {
