@@ -126,18 +126,18 @@ const ScrollAnimatedHero = () => {
           <motion.div 
             initial={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 flex items-center justify-center z-[100] bg-black text-white"
+            className="fixed inset-0 flex items-center justify-center z-[100] bg-black text-[#F8F1E3]"
           >
             <div className="flex flex-col items-center gap-6">
-               <div className="relative w-48 h-[2px] bg-white/10 overflow-hidden rounded-full">
+               <div className="relative w-48 h-[2px] bg-[#F8F1E3]/20 overflow-hidden rounded-full">
                   <motion.div 
-                    className="absolute inset-y-0 left-0 bg-white"
+                    className="absolute inset-y-0 left-0 bg-[#F8F1E3]"
                     initial={{ width: 0 }}
                     animate={{ width: `${loadProgress}%` }}
                   />
                </div>
-               <p className="tracking-[0.4em] uppercase text-[10px] font-medium text-white/40">
-                  Harvesting Quality <span className="text-white ml-2">{loadProgress}%</span>
+               <p className="tracking-[0.4em] uppercase text-[10px] font-medium text-[#F8F1E3]/60">
+                  Harvesting Quality <span className="text-[#F8F1E3] ml-2">{loadProgress}%</span>
                </p>
             </div>
           </motion.div>
@@ -166,10 +166,10 @@ const ScrollAnimatedHero = () => {
             transition={{ duration: 1.2, delay: 0.5, ease: "easeOut" }}
             className="text-center px-6 w-full max-w-5xl"
           >
-            <h1 className="text-6xl md:text-9xl font-bold text-white mb-8 tracking-tighter drop-shadow-2xl font-serif italic">
-              Nature’s Finest Nuts
-            </h1>
-            <p className="text-white/60 text-lg md:text-xl font-light tracking-[0.4em] uppercase mb-12">
+          <h1 className="text-6xl md:text-[8rem] font-black text-[#F5F5F5] mb-8 tracking-tight drop-shadow-[0_10px_30px_rgba(0,0,0,0.8)] font-sans uppercase leading-none px-4">
+            Nature’s Finest Nuts
+          </h1>
+            <p className="text-[#E3D4BC] text-lg md:text-xl font-light tracking-[0.4em] uppercase mb-12">
                Premium. Organic. Roasted.
             </p>
             
@@ -178,7 +178,7 @@ const ScrollAnimatedHero = () => {
               whileTap={{ scale: 0.95 }}
               className="pointer-events-auto inline-block"
             >
-              <button className="px-14 py-5 bg-white text-black font-bold uppercase tracking-widest text-xs rounded-full hover:bg-neutral-200 transition-all duration-500 shadow-[0_0_50px_rgba(255,255,255,0.15)]">
+              <button className="px-14 py-5 bg-[#F8F1E3] text-[#2F2218] font-bold uppercase tracking-widest text-xs rounded-full hover:bg-[#EADCC1] transition-all duration-500 shadow-[0_0_50px_rgba(255,255,255,0.15)]">
                  Shop Collection
               </button>
             </motion.div>
@@ -192,8 +192,8 @@ const ScrollAnimatedHero = () => {
           animate={{ opacity: 1 - displayProgress * 4 }}
         >
           <div className="flex items-center gap-4">
-             <div className="w-8 h-[1px] bg-white/40" />
-             <span className="text-white/40 text-[10px] uppercase tracking-[0.5em]">Scroll Down</span>
+             <div className="w-8 h-[1px] bg-[#F8F1E3]/40" />
+             <span className="text-[#F8F1E3]/45 text-[10px] uppercase tracking-[0.5em]">Scroll Down</span>
           </div>
         </motion.div>
       </div>
