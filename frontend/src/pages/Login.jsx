@@ -1,6 +1,8 @@
 import { Link } from 'react-router-dom';
 
 const Login = () => {
+  
+
   return (
     <div className="min-h-screen bg-black text-[#F8F1E3] relative overflow-hidden">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(189,83,25,0.25),_transparent_40%),radial-gradient(circle_at_bottom_left,_rgba(248,241,227,0.12),_transparent_35%)]" />

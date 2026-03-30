@@ -166,13 +166,13 @@ const ScrollAnimatedHero = () => {
             transition={{ duration: 1.2, delay: 0.5, ease: "easeOut" }}
             className="text-center px-6 w-full max-w-5xl"
           >
-          <h1 className="text-6xl md:text-[8rem] font-black text-[#F5F5F5] mb-8 tracking-tight drop-shadow-[0_10px_30px_rgba(0,0,0,0.8)] font-sans uppercase leading-none px-4">
+          <h1 className="text-6xl md:text-[8rem] font-black text-[#F8F1E3] mb-8 tracking-tight drop-shadow-[0_10px_30px_rgba(0,0,0,0.8)] font-sans uppercase leading-none px-4">
             Nature’s Finest Nuts
           </h1>
             <p className="text-[#E3D4BC] text-lg md:text-xl font-light tracking-[0.4em] uppercase mb-12">
                Premium. Organic. Roasted.
             </p>
-            
+           
             <motion.div
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
