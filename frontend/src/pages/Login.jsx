@@ -1,7 +1,82 @@
-import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import axios from 'axios';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Login = () => {
-  
+  const navigate = useNavigate();
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+  });
+  const [rememberMe, setRememberMe] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
+
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleLogin = async (event) => {
+    event.preventDefault();
+    setErrorMessage('');
+    setSuccessMessage('');
+
+    const email = formData.email.trim();
+    const password = formData.password;
+
+    if (!email || !password) {
+      setErrorMessage('Please enter both email and password.');
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      const response = await axios.post(`${API_BASE_URL}/app/users/login/`, {
+        email,
+        password,
+      });
+
+      const { access, refresh, message } = response.data;
+
+      if (!access || !refresh) {
+        setErrorMessage('Login response is missing tokens. Please try again.');
+        return;
+      }
+
+      const targetStorage = rememberMe ? localStorage : sessionStorage;
+      const alternateStorage = rememberMe ? sessionStorage : localStorage;
+
+      alternateStorage.removeItem('accessToken');
+      alternateStorage.removeItem('refreshToken');
+      alternateStorage.removeItem('userEmail');
+
+      targetStorage.setItem('accessToken', access);
+      targetStorage.setItem('refreshToken', refresh);
+      targetStorage.setItem('userEmail', email);
+
+      setSuccessMessage(message || 'Login successful.');
+      setTimeout(() => {
+        navigate('/');
+      }, 400);
+    } catch (error) {
+      const apiError =
+        error.response?.data?.error ||
+        error.response?.data?.detail ||
+        'Login failed. Please check your credentials and try again.';
+
+      setErrorMessage(apiError);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-black text-[#F8F1E3] relative overflow-hidden">
@@ -40,19 +115,36 @@ const Login = () => {
             <div className="mb-8">
               <p className="text-[11px] tracking-[0.35em] uppercase text-[#DCCFB8] mb-3">Account Login</p>
               <h2 className="text-3xl font-bold">Sign in</h2>
-              <p className="text-sm text-[#CBBFA9] mt-2">Design preview only. No authentication logic is connected yet.</p>
+              <p className="text-sm text-[#CBBFA9] mt-2">Use your account credentials to access your member experience.</p>
             </div>
 
-            <form className="space-y-5">
+            <form className="space-y-5" onSubmit={handleLogin}>
+              {errorMessage && (
+                <div className="rounded-xl border border-red-400/40 bg-red-500/10 px-4 py-3 text-sm text-red-200">
+                  {errorMessage}
+                </div>
+              )}
+
+              {successMessage && (
+                <div className="rounded-xl border border-emerald-400/40 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-200">
+                  {successMessage}
+                </div>
+              )}
+
               <div className="space-y-2">
                 <label htmlFor="email" className="text-xs uppercase tracking-[0.2em] text-[#DCCFB8]">
                   Email
                 </label>
                 <input
                   id="email"
+                  name="email"
                   type="email"
                   placeholder="you@example.com"
+                  value={formData.email}
+                  onChange={handleChange}
                   className="w-full px-4 py-3 rounded-xl bg-black/50 border border-white/15 focus:border-[#BD5319] focus:outline-none text-[#F8F1E3] placeholder:text-[#CBBFA9]/50 transition-colors"
+                  autoComplete="email"
+                  required
                 />
               </div>
 
@@ -62,15 +154,25 @@ const Login = () => {
                 </label>
                 <input
                   id="password"
+                  name="password"
                   type="password"
                   placeholder="Enter your password"
+                  value={formData.password}
+                  onChange={handleChange}
                   className="w-full px-4 py-3 rounded-xl bg-black/50 border border-white/15 focus:border-[#BD5319] focus:outline-none text-[#F8F1E3] placeholder:text-[#CBBFA9]/50 transition-colors"
+                  autoComplete="current-password"
+                  required
                 />
               </div>
 
               <div className="flex items-center justify-between text-sm">
                 <label className="flex items-center gap-2 text-[#DCCFB8]">
-                  <input type="checkbox" className="accent-[#BD5319]" />
+                  <input
+                    type="checkbox"
+                    checked={rememberMe}
+                    onChange={(event) => setRememberMe(event.target.checked)}
+                    className="accent-[#BD5319]"
+                  />
                   Remember me
                 </label>
                 <button type="button" className="text-[#F8F1E3] hover:text-[#BD5319] transition-colors">
@@ -79,10 +181,11 @@ const Login = () => {
               </div>
 
               <button
-                type="button"
-                className="w-full py-3 rounded-xl bg-[#F8F1E3] text-[#2F2218] font-bold uppercase tracking-[0.2em] hover:bg-[#EADCC1] transition-colors"
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full py-3 rounded-xl bg-[#F8F1E3] text-[#2F2218] font-bold uppercase tracking-[0.2em] hover:bg-[#EADCC1] disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
               >
-                Sign In
+                {isSubmitting ? 'Signing In...' : 'Sign In'}
               </button>
             </form>
 

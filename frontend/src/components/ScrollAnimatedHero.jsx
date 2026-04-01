@@ -12,6 +12,7 @@ const ScrollAnimatedHero = () => {
   const currentProgressRef = useRef(0);
   const targetProgressRef = useRef(0);
   const requestRef = useRef(null);
+  const lastDrawableFrameRef = useRef(null);
 
   const frameCount = 147;
   const currentFrame = (index) =>
@@ -21,19 +22,27 @@ const ScrollAnimatedHero = () => {
   useEffect(() => {
     const preloadImages = async () => {
       const loadedImages = [];
-      let loadedCount = 0;
+      let processedCount = 0;
 
       const promises = Array.from({ length: frameCount }, (_, i) => {
         return new Promise((resolve) => {
           const img = new Image();
-          img.src = currentFrame(i + 1);
+          const markFrameProcessed = () => {
+            processedCount++;
+            setLoadProgress(Math.round((processedCount / frameCount) * 100));
+          };
+
           img.onload = () => {
-            loadedCount++;
-            setLoadProgress(Math.round((loadedCount / frameCount) * 100));
+            loadedImages[i] = img;
+            markFrameProcessed();
             resolve(img);
           };
-          img.onerror = resolve; // Skip failed
-          loadedImages[i] = img;
+          img.onerror = () => {
+            loadedImages[i] = null;
+            markFrameProcessed();
+            resolve(null);
+          };
+          img.src = currentFrame(i + 1);
         });
       });
 
@@ -61,8 +70,14 @@ const ScrollAnimatedHero = () => {
       const progress = currentProgressRef.current;
       const frameIndex = Math.max(1, Math.min(frameCount, Math.floor(progress * (frameCount - 1)) + 1));
       const img = images[frameIndex - 1];
+      const hasDrawableImage = img && img.complete && img.naturalWidth > 0 && img.naturalHeight > 0;
+      const frameToDraw = hasDrawableImage ? img : lastDrawableFrameRef.current;
 
-      if (img && img.complete) {
+      if (hasDrawableImage) {
+        lastDrawableFrameRef.current = img;
+      }
+
+      if (frameToDraw && frameToDraw.complete && frameToDraw.naturalWidth > 0 && frameToDraw.naturalHeight > 0) {
         // High-DPI Scaling
         const dpr = window.devicePixelRatio || 1;
         const rect = canvas.getBoundingClientRect();
@@ -83,7 +98,7 @@ const ScrollAnimatedHero = () => {
         const dy = (rect.height - drawHeight) / 2;
 
         context.clearRect(0, 0, rect.width, rect.height);
-        context.drawImage(img, dx, dy, drawWidth, drawHeight);
+        context.drawImage(frameToDraw, dx, dy, drawWidth, drawHeight);
       }
 
       requestRef.current = requestAnimationFrame(render);

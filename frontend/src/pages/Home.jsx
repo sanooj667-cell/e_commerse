@@ -5,6 +5,7 @@ import axios from 'axios';
 import ScrollAnimatedHero from '../components/ScrollAnimatedHero';
 import Header from '../components/Header';
 import AboutSection from '../components/AboutSection';
+import AddToCart from '../components/AddToCart';
 
 function Home() {
   const [products, setProducts] = useState([]);
@@ -68,9 +69,10 @@ function Home() {
                            <p className="text-[#DCCFB8] text-sm mb-6 line-clamp-2">{product.description}</p>
                            <div className="flex w-full items-center justify-between">
                               <span className="text-2xl font-serif italic text-[#F8F1E3]">${product.price}</span>
-                              <button className="px-6 py-2 bg-[#F8F1E3] text-[#2F2218] text-xs font-bold uppercase rounded-full hover:bg-[#EADCC1] transition-colors">
-                                 Add to Cart
-                              </button>
+                              <AddToCart
+                                 productId={product.id}
+                                 className="px-6 py-2 bg-[#F8F1E3] text-[#2F2218] text-xs font-bold uppercase rounded-full hover:bg-[#EADCC1] transition-colors"
+                              />
                            </div>
                         </div>
                      </div>
