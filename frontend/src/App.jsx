@@ -1,8 +1,13 @@
 
 import { Outlet } from 'react-router-dom';
+import { CartProvider } from './context/CartContext.jsx';
 
 function App() {
-  return <Outlet />;
+  return (
+    <CartProvider>
+      <Outlet />
+    </CartProvider>
+  );
 }
 
 export default App;

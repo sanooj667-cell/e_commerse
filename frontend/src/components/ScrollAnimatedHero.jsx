@@ -20,6 +20,14 @@ const ScrollAnimatedHero = () => {
 
   // Preload Images with Tracking
   useEffect(() => {
+    let isActive = true;
+    let finishDelayTimer;
+    const forceStopTimer = setTimeout(() => {
+      if (isActive) {
+        setLoading(false);
+      }
+    }, 15000);
+
     const preloadImages = async () => {
       const loadedImages = [];
       let processedCount = 0;
@@ -28,16 +36,27 @@ const ScrollAnimatedHero = () => {
         return new Promise((resolve) => {
           const img = new Image();
           const markFrameProcessed = () => {
+            if (!isActive) {
+              return;
+            }
             processedCount++;
             setLoadProgress(Math.round((processedCount / frameCount) * 100));
           };
 
           img.onload = () => {
+            if (!isActive) {
+              resolve(null);
+              return;
+            }
             loadedImages[i] = img;
             markFrameProcessed();
             resolve(img);
           };
           img.onerror = () => {
+            if (!isActive) {
+              resolve(null);
+              return;
+            }
             loadedImages[i] = null;
             markFrameProcessed();
             resolve(null);
@@ -47,11 +66,26 @@ const ScrollAnimatedHero = () => {
       });
 
       await Promise.all(promises);
+      if (!isActive) {
+        return;
+      }
       setImages(loadedImages);
-      setTimeout(() => setLoading(false), 500); // Small delay for smooth exit
+      finishDelayTimer = setTimeout(() => {
+        if (isActive) {
+          setLoading(false);
+        }
+      }, 500); // Small delay for smooth exit
     };
 
     preloadImages();
+
+    return () => {
+      isActive = false;
+      clearTimeout(forceStopTimer);
+      if (finishDelayTimer) {
+        clearTimeout(finishDelayTimer);
+      }
+    };
   }, []);
 
   // Main Animation Loop

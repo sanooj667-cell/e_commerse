@@ -7,7 +7,10 @@ import Header from '../components/Header';
 import AboutSection from '../components/AboutSection';
 import AddToCart from '../components/AddToCart';
 
+const API_REQUEST_TIMEOUT_MS = 12000;
+
 function Home() {
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -15,7 +18,9 @@ function Home() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get('http://localhost:8000/app/products/');
+        const response = await axios.get(`${API_BASE_URL}/app/products/`, {
+          timeout: API_REQUEST_TIMEOUT_MS,
+        });
         setProducts(response.data);
         setLoading(false);
       } catch (err) {
@@ -26,7 +31,7 @@ function Home() {
     };
 
     fetchProducts();
-  }, []);
+  }, [API_BASE_URL]);
 
   return (
     <div className="bg-black">
@@ -58,7 +63,7 @@ function Home() {
                      <div key={product.id} className="group relative aspect-[4/5] bg-neutral-800 rounded-3xl overflow-hidden border border-white/5 hover:border-white/20 transition-all duration-500 cursor-pointer shadow-2xl">
                         {product.image && (
                            <img 
-                              src={product.image} 
+                              src={product.image.startsWith('http') ? product.image : `${API_BASE_URL}${product.image}`} 
                               alt={product.name}
                               className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-100 group-hover:scale-110 transition-all duration-700" 
                            />

@@ -61,6 +61,7 @@ const Login = () => {
       targetStorage.setItem('accessToken', access);
       targetStorage.setItem('refreshToken', refresh);
       targetStorage.setItem('userEmail', email);
+      window.dispatchEvent(new Event('auth-changed'));
 
       setSuccessMessage(message || 'Login successful.');
       setTimeout(() => {
@@ -190,7 +191,12 @@ const Login = () => {
             </form>
 
             <div className="mt-8 pt-6 border-t border-white/10 text-sm text-[#CBBFA9] flex items-center justify-between gap-4">
-              <span>New customer? Create account</span>
+              <Link
+                to="/register"
+                className="px-4 py-2 rounded-full border border-white/20 text-[#F8F1E3] hover:border-[#BD5319] hover:text-[#BD5319] transition-colors"
+              >
+                New customer? Create account
+              </Link>
               <Link
                 to="/"
                 className="px-4 py-2 rounded-full border border-white/20 text-[#F8F1E3] hover:border-[#BD5319] hover:text-[#BD5319] transition-colors"
